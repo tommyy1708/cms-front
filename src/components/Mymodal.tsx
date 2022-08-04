@@ -16,7 +16,7 @@ const Mymodal: any = (props: IProps) => {
     const handleCancel = () => {
         props.setShowUp(false);
     };
-    const handleOk = () =>{
+    const handleOk = () =>{ //点击确认
             form
                 .validateFields()
                 .then(res => {

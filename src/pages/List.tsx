@@ -1,7 +1,7 @@
 import { Space, Table, Button, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import React, { useEffect, useState } from 'react';
-import { GetArticleApi } from 'request/api';
+import { GetArticleApi, DeleteArticleApi } from 'request/api';
 import {useNavigate} from 'react-router-dom'
 
 
@@ -14,10 +14,8 @@ interface DataType {
 }
 
 
-
-
 const List: React.FC = () => {
-
+  const [num, setNum] = useState(0)
   const [data, setData] = useState<DataType[]>([])
   const Titlecomp = (props: { title: string; subtitle?: string }) => (
     <>
@@ -30,6 +28,7 @@ const List: React.FC = () => {
 
   
   const ActionBtn = (props:{id:number}) => {
+   
     const navigate = useNavigate();
     const changeArt = () => {
       
@@ -41,12 +40,21 @@ const List: React.FC = () => {
         return;
       }
     }
-    
+
+    const deletFn =()=>{
+      DeleteArticleApi({id:props.id}).then((res:any)=>{
+        if(res.errCode === 0){
+          message.success('文章删除成功');
+          setNum(num+1);
+          console.log(num);
+        }
+      })
+    }
     return (
       <>
       <Space size="middle">
         <Button onClick={changeArt} type="primary">Edit</Button>
-        <Button type="primary" danger>Delete</Button>
+        <Button onClick={deletFn} type="primary" danger>Delete</Button>
       </Space>
       </>
     )
@@ -97,9 +105,8 @@ const List: React.FC = () => {
       })
       setData(newarr)
     })
-  }, [])
+  }, [num])
   return <Table showHeader={false} columns={columns} dataSource={data} />;
-
 }
 
 export default List;

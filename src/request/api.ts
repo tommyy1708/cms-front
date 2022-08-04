@@ -36,3 +36,5 @@ interface IEditArticle {
     id:number;
 }
 export const EditArticleApi = (params:IEditArticle) =>request.post('/article/edit',params)
+
+export const DeleteArticleApi = (params:{id:number}) => request.post('/article/delete',params)

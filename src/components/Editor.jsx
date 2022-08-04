@@ -5,6 +5,7 @@ import {useLocation, useParams} from 'react-router-dom'
 import {ArrowLeftOutlined } from "@ant-design/icons"
 import Mymodal from './Mymodal'
 import {GetArticleByIdApi,EditArticleApi} from 'request/api'
+import { useNavigate } from 'react-router-dom';
 
 let editor = null
 
@@ -15,6 +16,7 @@ const Editor = () => {
   const [modaltitle, setModaltitle] = useState('');
   const [modalsubtitle, setModalsubtitle] = useState('');
   const {id} = useParams()
+  const navigate = useNavigate();
 
   useEffect(() => {
         // 实例化
@@ -49,11 +51,17 @@ const Editor = () => {
   const submitAticleEdit = (values) =>{
     console.log('父组件',values)
     EditArticleApi({
-     ...values,
+     ...values,//简写了title和subtitle
       content,
       id      
     }).then(res=>{
-      console.log('父组件拿到数据:',res)
+      if(res.errCode===0){
+        setShowUp(false)
+        message.success(`${res.message},即将返回列表页`)
+        setTimeout(()=>{
+          navigate('/list')
+        },2500)
+      }
     })
   }
 

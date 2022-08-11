@@ -23,7 +23,11 @@ interface IChangeInfoApi {
 export const ChangeInfoApi = (params:IChangeInfoApi) => request.post('/info', params)
 
 //获取文章列表
-export const GetArticleApi = () => request.get('/article/list')
+interface IGetArticleApi{
+    current:number;
+    counts:number;
+}
+export const GetArticleApi = (params:IGetArticleApi) => request.post('/article/list',params)
 
 //根据id拿文章数据
 export const GetArticleByIdApi = (params:{id:number}) => request.post('/article/info', params)
@@ -33,8 +37,10 @@ interface IEditArticle {
     title:string;
     subtitle?:string;
     content:string;
-    id:number;
+    id?:number;
 }
 export const EditArticleApi = (params:IEditArticle) =>request.post('/article/edit',params)
 
 export const DeleteArticleApi = (params:{id:number}) => request.post('/article/delete',params)
+
+export const AddArticleApi = (params: IEditArticle) => request.post('/article/add', params);

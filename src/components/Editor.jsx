@@ -4,7 +4,7 @@ import E from 'wangeditor'
 import {useLocation, useParams} from 'react-router-dom'
 import {ArrowLeftOutlined } from "@ant-design/icons"
 import Mymodal from './Mymodal'
-import {GetArticleByIdApi,EditArticleApi} from 'request/api'
+import {GetArticleByIdApi,EditArticleApi ,AddArticleApi} from 'request/api'
 import { useNavigate } from 'react-router-dom';
 
 let editor = null
@@ -24,10 +24,8 @@ const Editor = () => {
         editor.config.onchange = (newHtml) => {
           setContent(newHtml);
         }
-    
         // 创建
         editor.create()
-
     if(id){
       GetArticleByIdApi({id}).then(res=>{
         if(res.errCode===0){
@@ -38,7 +36,10 @@ const Editor = () => {
         }
       })
     }else{
-      message.error('参数错误')
+      AddArticleApi().then(res=>{
+        console.log(res)
+        
+      })
     }
 
     return () => {

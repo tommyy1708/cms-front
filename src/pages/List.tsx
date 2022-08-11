@@ -1,4 +1,4 @@
-import { Space, Table, Button, message } from 'antd';
+import { Space, Table, Button, message ,Pagination} from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import React, { useEffect, useState } from 'react';
 import { GetArticleApi, DeleteArticleApi } from 'request/api';
@@ -13,10 +13,11 @@ interface DataType {
   action: React.ReactNode;
 }
 
-
 const List: React.FC = () => {
   const [num, setNum] = useState(0)
   const [data, setData] = useState<DataType[]>([])
+  const [total, setTotal] = useState(0)
+  const [current, setCurrent] = useState(1)
   const Titlecomp = (props: { title: string; subtitle?: string }) => (
     <>
       <div>
@@ -26,12 +27,9 @@ const List: React.FC = () => {
     </>
   )
 
-  
-  const ActionBtn = (props:{id:number}) => {
-   
+  const ActionBtn = (props:{current:number; id:number; getListFn:(page:number,pageSize:number)=>void}) => {
     const navigate = useNavigate();
     const changeArt = () => {
-      
       let editKey = localStorage.getItem('editable');
       if (editKey === '0') {
         navigate(`/edit/${props.id}`)
@@ -46,7 +44,9 @@ const List: React.FC = () => {
         if(res.errCode === 0){
           message.success('文章删除成功');
           setNum(num+1);
-          console.log(num);
+          getListFn(current,10)
+        }else{
+          message.warning(res.message)
         }
       })
     }
@@ -80,11 +80,12 @@ const List: React.FC = () => {
     },
   ];
 
-  useEffect(() => {
-    GetArticleApi().then((res: any) => {
-      if (res.errCode === 0) {
-        message.success('成功获取数据')
-      }
+  
+  const getListFn = (page:number,pageSize:number) =>{
+    GetArticleApi({
+      current:page,
+      counts:pageSize
+    }).then((res: any) => {
       let newarr: DataType[] = [];
 
       interface IItem {
@@ -93,20 +94,37 @@ const List: React.FC = () => {
         date: string,
         id: number
       }
-
-      res.data.map((item: IItem) => {
+      
+      res.data.arr.map((item: IItem) => {
         let obj = {
           key: item.id,
           title: <Titlecomp title={item.title} subtitle={item.subtitle} />,
           date: item.date,
-          action: <ActionBtn id={item.id} key={item.id} />
+          action: <ActionBtn current={current} getListFn={getListFn} id={item.id} key={item.id} />
         }
         newarr.push(obj)
       })
       setData(newarr)
+      setTotal(res.data.total);
+      setCurrent(res.data.current)
     })
-  }, [num])
-  return <Table showHeader={false} columns={columns} dataSource={data} />;
+  }
+  useEffect(() => {
+    getListFn(1,10)
+  },[num])
+
+const onPageChange = (page:number, pageSize:number) =>{
+  console.log(page,pageSize);
+  getListFn(page,pageSize)
+  
+}
+  return(
+    <>
+    <Table pagination={false}  showHeader={false} columns={columns} dataSource={data}/>
+    <br/>
+    <Pagination onChange={onPageChange} defaultCurrent={1} total={total}/>
+    </>
+  ) 
 }
 
 export default List;

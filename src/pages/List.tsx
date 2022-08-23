@@ -114,7 +114,6 @@ const List: React.FC = () => {
   },[num])
 
 const onPageChange = (page:number, pageSize:number) =>{
-  console.log(page,pageSize);
   getListFn(page,pageSize)
   
 }

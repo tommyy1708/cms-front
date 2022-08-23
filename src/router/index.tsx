@@ -5,11 +5,12 @@ import Loading from '../components/Loading'
 
 interface IRoute {
 path:string;
-component:React.FC<any>;
+component:any;
 children? : IRoute[] 
 }
+// React.FC<any>
 
-const router_arr = [
+const router_arr:IRoute[] = [
     {
         path: '/', component: App, children: [
             { path: '/list', component: lazy(() => import('pages/List')) },

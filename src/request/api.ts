@@ -44,3 +44,14 @@ export const EditArticleApi = (params:IEditArticle) =>request.post('/article/edi
 export const DeleteArticleApi = (params:{id:number}) => request.post('/article/delete',params)
 
 export const AddArticleApi = (params: IEditArticle) => request.post('/article/add', params);
+
+//获取小编名单
+export const EditorApi = () => request.get('/namelist')
+
+
+interface IChangeEditorApi {
+    id:number;
+    open:number;
+}
+
+export const ChangeEditorApi = (params:IChangeEditorApi) => request.post('/namelist',params)

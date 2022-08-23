@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom'
+import { Outlet, Link, useLocation , useNavigate} from 'react-router-dom'
 import 'App.less';
 import 'App.css';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
@@ -13,23 +13,28 @@ interface IProps {
   changeKeyFn: () => void;
 }
 function App(props: IProps) {
-
+  const [bread,setBread] = useState('')
   const [defaultKey, setDefaultKey] = useState('0');
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     switch (location.pathname) {
       case '/list':
         setDefaultKey('1')
+        setBread('list')
         break;
       case '/edit':
         setDefaultKey('2')
+        setBread('edit')
         break;
       case '/means':
         setDefaultKey('3')
+        setBread('means')
         break;
       case '/namelist':
-        setDefaultKey('4')
+        setDefaultKey('5')
+        setBread('namelist')
         break;
     default:
     setDefaultKey('0')
@@ -37,6 +42,10 @@ function App(props: IProps) {
   }
   if(location.pathname.includes('/edit')){
     setDefaultKey('2')
+    setBread('edit')
+  }
+  if(location.pathname === '/'){
+    navigate('/list')
   }
   }, [location.pathname])
 
@@ -65,10 +74,10 @@ function App(props: IProps) {
     {label:<Link to={'/edit'}>文章编辑</Link>, key:'2', icon:<NotificationOutlined />},
     {label:<Link to={'/means'}>修改资料</Link>, key:'3', icon:<NotificationOutlined />},
     {
-      label: <Link to={'/namelist'}>管理员</Link>,
+      label: '管理员',
       key: '4',
       style:{display:localStorage.getItem('player')==='vip' ? 'block':'none'},
-      children: [{ label: '小编名单', key: '5' }],
+      children: [{ label:<Link to={'/namelist'} >小编名单</Link>, key: '5' }],
       icon:<UserOutlined />
     },
   ];
@@ -90,9 +99,8 @@ function App(props: IProps) {
         </Sider>
         <Layout style={{ padding: '0 24px 24px' }}>
           <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>List</Breadcrumb.Item>
-            <Breadcrumb.Item>App</Breadcrumb.Item>
+            <Breadcrumb.Item><Link to={'/'}>Home</Link></Breadcrumb.Item>
+            <Breadcrumb.Item>{bread}</Breadcrumb.Item>
           </Breadcrumb>
           <Content
             className="mycontent"

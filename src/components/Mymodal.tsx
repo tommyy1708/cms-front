@@ -41,7 +41,7 @@ const Mymodal: any = (props: IProps) => {
     return (
         <>
             <Modal
-                title="Basic Modal"
+                title="Submit article"
                 visible={props.showModal}
                 onCancel={handleCancel}
                 onOk={handleOk}
@@ -59,7 +59,7 @@ const Mymodal: any = (props: IProps) => {
                     <Form.Item
                         label="Title"
                         name="title"
-                        rules={[{ required: true, message: 'Please input your username!' }]}
+                        rules={[{ required: true, message: 'Please input your title!' }]}
                     >
                         <Input />
                     </Form.Item>

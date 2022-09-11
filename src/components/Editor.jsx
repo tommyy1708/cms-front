@@ -6,6 +6,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons"
 import Mymodal from './Mymodal'
 import { GetArticleByIdApi, EditArticleApi, AddArticleApi } from 'request/api'
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment'
 
 let editor = null
 
@@ -29,7 +30,6 @@ const Editor = () => {
     if (id) {
       GetArticleByIdApi({ id }).then(res => {
         if (res.errCode === 0) {
-          console.log(res.data);
           editor.txt.html(res.data.content)
           setModaltitle(res.data.title)
           setModalsubtitle(res.data.subtitle)
@@ -66,10 +66,10 @@ const Editor = () => {
         ...values,//简写了title和subtitle
         content
       }).then(res => {
-        console.log(res)
+        // console.log(res)
         if(res.errCode === 0){
           setShowUp(false)
-          message.success(`${res.message}`)
+          message.success(`${res.message},即将返回列表页`)
         }
         setTimeout(() => {
           navigate('/list')
@@ -83,11 +83,11 @@ const Editor = () => {
       <div className="editor">
         <PageHeader
           backIcon={location.pathname === '/edit' ? false : <ArrowLeftOutlined />}
-          onBack={() => null}
+          onBack={() =>  navigate('/list')}
           style={{ padding: 0, marginBottom: '20px' }}
           ghost={false}
           title="文章编辑"
-          subTitle={`当前日期：${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`}
+          subTitle={`当前日期： ${moment().format('L')}`}
           extra={[
             <Button key="3" type="primary" onClick={() => setShowUp(true)}>提交文章</Button>,
           ]}

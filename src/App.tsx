@@ -7,6 +7,7 @@ import { Breadcrumb, Layout, Menu, MenuProps } from 'antd';
 import MyHeader from 'components/MyHeader';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux'
+import {UserPlayApi} from './request/api';
 
 interface IProps {
   mykey: number;
@@ -17,6 +18,8 @@ function App(props: IProps) {
   const [defaultKey, setDefaultKey] = useState('0');
   const location = useLocation();
   const navigate = useNavigate();
+  const [playID,setPlayID] = useState('');
+ 
 
   useEffect(() => {
     switch (location.pathname) {
@@ -47,6 +50,10 @@ function App(props: IProps) {
   if(location.pathname === '/'){
     navigate('/list')
   }
+
+  UserPlayApi().then((res=>{
+    res.data[0].player = setPlayID("vip")
+  }))
   }, [location.pathname])
 
   const { Content, Sider, Footer } = Layout;
@@ -76,7 +83,7 @@ function App(props: IProps) {
     {
       label: '管理员',
       key: '4',
-      style:{display:localStorage.getItem('player')==='vip' ? 'block':'none'},
+      style:{display:playID ==='vip' ? 'block':'none'},
       children: [{ label:<Link to={'/namelist'} >小编名单</Link>, key: '5' }],
       icon:<UserOutlined />
     },

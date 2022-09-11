@@ -102,7 +102,6 @@ const Means = (props: Iprops) => {
           </Button>
         </Form.Item>
       </Form>
-
       <Upload
         name="avatar"
         listType="picture-card"

@@ -1,9 +1,9 @@
 import { Space, Table, Button, message ,Pagination} from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import React, { useEffect, useState } from 'react';
-import { GetArticleApi, DeleteArticleApi } from 'request/api';
+import { GetArticleApi, DeleteArticleApi, UserEditableApi} from 'request/api';
 import {useNavigate} from 'react-router-dom'
-
+import moment from 'moment'
 
 
 interface DataType {
@@ -29,14 +29,19 @@ const List: React.FC = () => {
 
   const ActionBtn = (props:{current:number; id:number; getListFn:(page:number,pageSize:number)=>void}) => {
     const navigate = useNavigate();
-    const changeArt = () => {
-      let editKey = localStorage.getItem('editable');
-      if (editKey === '0') {
-        navigate(`/edit/${props.id}`)
-      } else {
-        message.warning('抱歉你没有权限')
-        return;
-      }
+    // const changeArt = () => {
+    //   UserEditableApi().then((res)=>{
+    //   if(res.data[0]===1){
+    //     navigate(`/edit/${props.id}`)
+    //   })}
+    const changeArt = ()=>{
+      UserEditableApi().then((res:any)=>{
+        if(res.data[0].editable===1){
+          navigate(`/edit/${props.id}`,{replace:true})
+        }else{
+          message.warning(res.message)
+        }
+      })
     }
 
     const deletFn =()=>{
@@ -50,6 +55,7 @@ const List: React.FC = () => {
         }
       })
     }
+
     return (
       <>
       <Space size="middle">
@@ -65,8 +71,9 @@ const List: React.FC = () => {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      width: '50%',
+      width: '45%',
     },
+    
     {
       title: 'Date',
       dataIndex: 'date',
@@ -78,6 +85,7 @@ const List: React.FC = () => {
       dataIndex: 'action',
       key: 'action'
     },
+     
   ];
 
   
@@ -99,7 +107,7 @@ const List: React.FC = () => {
         let obj = {
           key: item.id,
           title: <Titlecomp title={item.title} subtitle={item.subtitle} />,
-          date: item.date,
+          date: moment( item.date).format('LL'),
           action: <ActionBtn current={current} getListFn={getListFn} id={item.id} key={item.id} />
         }
         newarr.push(obj)
@@ -119,7 +127,7 @@ const onPageChange = (page:number, pageSize:number) =>{
 }
   return(
     <>
-    <Table pagination={false}  showHeader={false} columns={columns} dataSource={data}/>
+    <Table pagination={false} showHeader={true} columns={columns} dataSource={data}/>
     <br/>
     <Pagination onChange={onPageChange} defaultCurrent={1} total={total}/>
     </>

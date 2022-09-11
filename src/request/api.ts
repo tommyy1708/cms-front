@@ -14,6 +14,12 @@ export const LoginApi = (params:IRegisterParams) => request.post('/login',params
 //用户信息获取
 export const UserinfoApi = () => request.get('/info')
 
+//获取编辑权限
+export const UserEditableApi = () => request.get('/editable')
+
+//获取身份权限
+export const UserPlayApi = () => request.get('/player')
+
 interface IChangeInfoApi {
     username?: string | number;
     password?: string | number;

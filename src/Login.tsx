@@ -15,15 +15,13 @@ const Login: React.FC = () => {
         localStorage.setItem('username',res.data.username)
         localStorage.setItem('cms-token',res.data['cms-token'])
         localStorage.setItem('avatar',res.data.avatar)
-        localStorage.setItem('player',res.data.player)
-        localStorage.setItem('editable',res.data.editable)
-
+        // localStorage.setItem('player',res.data.player)
+        // localStorage.setItem('editable',res.data.editable)
         setTimeout(() => {
           nav('/', { replace: true });
         }, 3000) 
       } else {
-        message.error('用户已经存在', 2);
-        return;
+        message.error(res.message, 2);
       }
     })
   };
@@ -62,7 +60,7 @@ const Login: React.FC = () => {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" block size='large'>
-            Submit
+            Login
           </Button>
         </Form.Item>
       </Form>

@@ -8,7 +8,7 @@ interface AxiosOption {
 
 // 配置项
 const axiosOption: AxiosOption = {
-    baseURL: 'http://localhost:9000/manage',
+    baseURL: '/rcr',
     timeout: 5000
 }
 
